@@ -28,7 +28,7 @@ object Client {
         }
 
         install(Logging) {
-            logger = Logger.DEFAULT
+            logger = Logger.SIMPLE
             // - LogLevel.NONE: Silent
             // - LogLevel.INFO: Headers and status codes only
             // - LogLevel.BODY: Headers, status codes, AND the complete JSON body
@@ -37,8 +37,8 @@ object Client {
     }
 
     // 3. THE CALLS: Clean suspend functions using the client
-    suspend inline fun <reified T> fetch0(url: String, parameter: String): T {
-        return client.get(url) { parameter("q", parameter) }
+    suspend inline fun <reified T> fetchWithParam(url: String, parameterName: String, parameterValue: String): T {
+        return client.get(url) { parameter(parameterName, parameterValue) }
             .body()
     }
 
@@ -47,35 +47,41 @@ object Client {
             .body()
     }
 
-    suspend inline fun <reified T> fetch1(url: String, parameter: String): T {
-        return client.get(url+parameter).body()
-    }
-
-    inline fun <reified T> query(url: String, parameter: String) = runBlocking {
+    inline fun <reified T> query(url: String, parameter: String): T? = runBlocking {
         try {
-            // Pass the target model type as the reified generic argument <TodoItem>
             val fetched: T = fetch<T>(url, parameter)
-
-            // Use the parsed object safely
-            println("[Fetched] $fetched")
-
+            fetched
         } catch (e: Exception) {
             // Ktor propagates network and parsing exceptions up the stack
-            println("[E] Failed to execute query: ${e.message}")
+            System.err.println("[E] Failed to execute query: ${e.message}")
+            null
         }
     }
+
+    val endpoint = "http://localhost:8080"
 
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
-        val endpoint = "http://localhost:8080"
-       //query<String>("$endpoint/", "")
-        query<Synset>("$endpoint/api/synset/", "00001740-a")
+        query<String>("$endpoint/", "")
 
-        listOf("row%1:14:00::", "row%1:17:00::", "row%1:06:00::", "row%1:14:01::", "row%1:07:00::", "row%1:04:00::", "row%1:10:00::", "row%2:38:00::").forEach { sk ->
-            query<Sense>("$endpoint/api/sense/", sk)
-        }
+        listOf("00001740-a", "00001740-n", "00001740-r", "00001740-v")
+            .forEach {
+                query<Synset>("$endpoint/api/synset/", it)?.let { println("[Fetched] $it") }
+            }
 
-        query<Lex>("$endpoint/api/lex/", "row,n-1")
-        query<Collection<Lex>>("$endpoint/api/word/", "row")
+        listOf("row%1:14:00::", "row%1:17:00::", "row%1:06:00::", "row%1:14:01::", "row%1:07:00::", "row%1:04:00::", "row%1:10:00::", "row%2:38:00::")
+            .forEach {
+                query<Sense>("$endpoint/api/sense/", it)?.let { println("[Fetched] $it") }
+            }
+
+        listOf("row,n-1", "row,n-2", "row,v")
+            .forEach {
+                query<Lex>("$endpoint/api/lex/", it)?.let { println("[Fetched] $it") }
+            }
+
+        listOf("row", "grow")
+            .forEach {
+                query<Collection<Lex>>("$endpoint/api/word/", it)?.let { println("[Fetched] $it") }
+            }
     }
 }
