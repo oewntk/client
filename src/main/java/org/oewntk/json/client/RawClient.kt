@@ -8,7 +8,7 @@ import io.ktor.client.statement.*
 class RawJsonClient (
     private val baseUrl: String,
     private val client: HttpClient = HttpClient(CIO)
-) : BaseClient() {
+) {
     suspend fun get(path: String): String =
         client.get("$baseUrl$path").bodyAsText()
 

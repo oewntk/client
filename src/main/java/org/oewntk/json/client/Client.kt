@@ -6,14 +6,15 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
-import io.ktor.client.statement.bodyAsText
+import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 
-class Client : BaseClient() {
-
+class Client(
+    val baseUrl: String
+) {
     // THE ENGINE: Handled by passing CIO (or OkHttp) to HttpClient()
     val client = HttpClient(CIO) {
 
@@ -34,22 +35,24 @@ class Client : BaseClient() {
         }
     }
 
+    fun close() = client.close()
+
     // O B J E C T
 
     // THE CALLS: Clean suspend functions using the client
-    suspend inline fun <reified T> fetchWithParam(url: String, parameterName: String, parameterValue: String): T {
-        return client.get(url) { parameter(parameterName, parameterValue) }
+    suspend inline fun <reified T> fetchWithParam(path: String, parameterName: String, parameterValue: String): T {
+        return client.get("$baseUrl$path") { parameter(parameterName, parameterValue) }
             .body()
     }
 
-    suspend inline fun <reified T> fetch(url: String, parameter: String): T {
-        return client.get(url) { url { appendPathSegments(parameter) } }
+    suspend inline fun <reified T> fetch(path: String, parameter: String): T {
+        return client.get("$baseUrl$path") { url { appendPathSegments(parameter) } }
             .body()
     }
 
-    inline fun <reified T> query(url: String, parameter: String): T? = runBlocking {
+    inline fun <reified T> query(path: String, parameter: String): T? = runBlocking {
         try {
-            val fetched: T = fetch<T>(url, parameter)
+            val fetched: T = fetch<T>(path, parameter)
             fetched
         } catch (e: Exception) {
             // Ktor propagates network and parsing exceptions up the stack
@@ -60,14 +63,14 @@ class Client : BaseClient() {
 
     // T E X T
 
-    suspend inline fun fetchText(url: String, parameter: String): String {
-        return client.get(url) { url { appendPathSegments(parameter) } }
+    suspend inline fun fetchText(path: String, parameter: String): String {
+        return client.get("$baseUrl$path") { url { appendPathSegments(parameter) } }
             .bodyAsText()
     }
 
-    fun queryText(url: String, parameter: String): String? = runBlocking {
+    fun queryText(path: String, parameter: String): String? = runBlocking {
         try {
-            val fetched: String = fetchText(url, parameter)
+            val fetched: String = fetchText(path, parameter)
             fetched
         } catch (e: Exception) {
             // Ktor propagates network and parsing exceptions up the stack
