@@ -1,0 +1,36 @@
+digraph "io.github.oewntk:oewn-client:jar:3.0.1" { 
+	"io.github.oewntk:oewn-client:jar:3.0.1" -> "io.github.oewntk:model:jar:3.0.1:compile" ; 
+	"io.github.oewntk:oewn-client:jar:3.0.1" -> "org.jetbrains.kotlin:kotlin-stdlib:jar:2.4.0:compile" ; 
+	"io.github.oewntk:oewn-client:jar:3.0.1" -> "org.jetbrains.kotlinx:kotlinx-cli-jvm:jar:0.3.6:compile" ; 
+	"io.github.oewntk:oewn-client:jar:3.0.1" -> "io.ktor:ktor-serialization-kotlinx-json-jvm:jar:3.5.1:compile" ; 
+	"io.github.oewntk:oewn-client:jar:3.0.1" -> "io.ktor:ktor-client-core-jvm:jar:3.5.1:compile" ; 
+	"io.github.oewntk:oewn-client:jar:3.0.1" -> "io.ktor:ktor-client-cio-jvm:jar:3.5.1:compile" ; 
+	"io.github.oewntk:oewn-client:jar:3.0.1" -> "io.ktor:ktor-client-content-negotiation-jvm:jar:3.5.1:compile" ; 
+	"io.github.oewntk:oewn-client:jar:3.0.1" -> "io.ktor:ktor-client-logging-jvm:jar:3.5.1:compile" ; 
+	"io.github.oewntk:oewn-client:jar:3.0.1" -> "org.jetbrains.kotlin:kotlin-test:jar:2.4.0:test" ; 
+	"io.github.oewntk:model:jar:3.0.1:compile" -> "org.jetbrains.kotlinx:kotlinx-serialization-core:jar:1.7.3:compile" ; 
+	"org.jetbrains.kotlinx:kotlinx-serialization-core:jar:1.7.3:compile" -> "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:jar:1.7.3:compile" ; 
+	"org.jetbrains.kotlin:kotlin-stdlib:jar:2.4.0:compile" -> "org.jetbrains:annotations:jar:13.0:compile" ; 
+	"org.jetbrains.kotlinx:kotlinx-cli-jvm:jar:0.3.6:compile" -> "org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.9.10:runtime" ; 
+	"org.jetbrains.kotlinx:kotlinx-cli-jvm:jar:0.3.6:compile" -> "org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.9.10:runtime" ; 
+	"org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.9.10:runtime" -> "org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.9.10:runtime" ; 
+	"io.ktor:ktor-serialization-kotlinx-json-jvm:jar:3.5.1:compile" -> "org.slf4j:slf4j-api:jar:2.0.18:compile" ; 
+	"io.ktor:ktor-serialization-kotlinx-json-jvm:jar:3.5.1:compile" -> "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.11.0:compile" ; 
+	"io.ktor:ktor-serialization-kotlinx-json-jvm:jar:3.5.1:compile" -> "io.ktor:ktor-serialization-kotlinx-jvm:jar:3.5.1:compile" ; 
+	"io.ktor:ktor-serialization-kotlinx-json-jvm:jar:3.5.1:compile" -> "org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:jar:1.11.0:compile" ; 
+	"io.ktor:ktor-serialization-kotlinx-json-jvm:jar:3.5.1:compile" -> "org.jetbrains.kotlinx:kotlinx-serialization-json-io-jvm:jar:1.11.0:compile" ; 
+	"org.jetbrains.kotlinx:kotlinx-serialization-json-io-jvm:jar:1.11.0:compile" -> "org.jetbrains.kotlinx:kotlinx-io-core-jvm:jar:0.6.0:compile" ; 
+	"org.jetbrains.kotlinx:kotlinx-io-core-jvm:jar:0.6.0:compile" -> "org.jetbrains.kotlinx:kotlinx-io-bytestring-jvm:jar:0.6.0:compile" ; 
+	"io.ktor:ktor-client-core-jvm:jar:3.5.1:compile" -> "io.ktor:ktor-http-jvm:jar:3.5.1:compile" ; 
+	"io.ktor:ktor-client-core-jvm:jar:3.5.1:compile" -> "io.ktor:ktor-http-cio-jvm:jar:3.5.1:compile" ; 
+	"io.ktor:ktor-client-core-jvm:jar:3.5.1:compile" -> "io.ktor:ktor-events-jvm:jar:3.5.1:compile" ; 
+	"io.ktor:ktor-client-core-jvm:jar:3.5.1:compile" -> "io.ktor:ktor-websocket-serialization-jvm:jar:3.5.1:compile" ; 
+	"io.ktor:ktor-client-core-jvm:jar:3.5.1:compile" -> "io.ktor:ktor-sse-jvm:jar:3.5.1:compile" ; 
+	"io.ktor:ktor-client-core-jvm:jar:3.5.1:compile" -> "org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:jar:1.11.0:compile" ; 
+	"io.ktor:ktor-http-jvm:jar:3.5.1:compile" -> "io.ktor:ktor-utils-jvm:jar:3.5.1:compile" ; 
+	"io.ktor:ktor-http-cio-jvm:jar:3.5.1:compile" -> "io.ktor:ktor-network-jvm:jar:3.5.1:compile" ; 
+	"io.ktor:ktor-http-cio-jvm:jar:3.5.1:compile" -> "io.ktor:ktor-io-jvm:jar:3.5.1:compile" ; 
+	"io.ktor:ktor-client-cio-jvm:jar:3.5.1:compile" -> "io.ktor:ktor-websockets-jvm:jar:3.5.1:compile" ; 
+	"io.ktor:ktor-client-cio-jvm:jar:3.5.1:compile" -> "io.ktor:ktor-network-tls-jvm:jar:3.5.1:compile" ; 
+	"io.ktor:ktor-client-content-negotiation-jvm:jar:3.5.1:compile" -> "io.ktor:ktor-serialization-jvm:jar:3.5.1:compile" ; 
+ } 
