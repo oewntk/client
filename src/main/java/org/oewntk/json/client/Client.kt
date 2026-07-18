@@ -12,6 +12,16 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 
+val prettyJson = Json {
+    prettyPrint = true
+    // Optional: prettyPrintIndent = "    " // Defaults to 4 spaces in recent versions
+}
+
+fun String.pretty(): String {
+    val jsonElement = Json.parseToJsonElement(this)
+    return prettyJson.encodeToString(jsonElement)
+}
+
 class Client(
     val baseUrl: String
 ) {
@@ -40,14 +50,11 @@ class Client(
     // O B J E C T
 
     // THE CALLS: Clean suspend functions using the client
-    suspend inline fun <reified T> fetchWithParam(path: String, parameterName: String, parameterValue: String): T {
-        return client.get("$baseUrl$path") { parameter(parameterName, parameterValue) }
-            .body()
-    }
-
     suspend inline fun <reified T> fetch(path: String, parameter: String): T {
-        return client.get("$baseUrl$path") { url { appendPathSegments(parameter) } }
-            .body()
+        return client.get("$baseUrl$path") {
+            url { appendPathSegments(parameter) }
+            // parameter(parameterName, parameterValue)
+        }.body()
     }
 
     inline fun <reified T> query(path: String, parameter: String): T? = runBlocking {
@@ -63,15 +70,23 @@ class Client(
 
     // T E X T
 
-    suspend inline fun fetchText(path: String, parameter: String): String {
-        return client.get("$baseUrl$path") { url { appendPathSegments(parameter) } }
-            .bodyAsText()
+    suspend inline fun fetchText(path: String, parameter: String, options: String? = null): String {
+        val response = client.get("$baseUrl$path") {
+            url { appendPathSegments(parameter) }
+            if (options != null) header(HttpHeaders.Prefer, options)
+        }
+        // Inspect if the backend subsystems honored your hint
+        val appliedHints = response.headers[HttpHeaders.PreferenceApplied]
+        // println("HTTP Status: ${response.status}")
+        if (appliedHints != null) println("Server honored these preferences: $appliedHints")
+
+        return response.bodyAsText()
     }
 
-    fun queryText(path: String, parameter: String): String? = runBlocking {
+    fun queryText(path: String, parameter: String, options: String? = null): String? = runBlocking {
         try {
-            val fetched: String = fetchText(path, parameter)
-            fetched
+            val fetched: String = fetchText(path, parameter, options)
+            fetched.pretty()
         } catch (e: Exception) {
             // Ktor propagates network and parsing exceptions up the stack
             System.err.println("[E] Failed to execute query: ${e.message}")
