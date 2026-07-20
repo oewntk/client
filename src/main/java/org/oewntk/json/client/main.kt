@@ -100,6 +100,6 @@ fun queryText() {
 }
 
 fun main(args: Array<String>) {
-    //queryObject()
+    queryObject()
     queryText()
 }
