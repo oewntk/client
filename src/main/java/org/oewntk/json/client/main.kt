@@ -33,39 +33,6 @@ fun queryObject() {
 
 val allOptions = listOf(null, "mode=model", "mode=oewn", "mode=data", "mode=data,method=typed")
 
-fun queryText1() {
-    val client = Client(endpoint)
-    client.queryText("/", "")
-
-    listOf("00001740-n")
-        .forEach { id ->
-            allOptions.forEach { options ->
-                client.queryText("/api/synset/", id, options = options)?.let { println("[JSON SYNSET $options]\n$it") }
-            }
-        }
-
-    listOf("row%1:14:00::")
-        .forEach { id ->
-            allOptions.forEach { options ->
-                client.queryText("/api/sense/", id, options = options)?.let { println("[JSON SENSE $options]\n$it") }
-            }
-        }
-
-    listOf("row,n-1")
-        .forEach { id ->
-            allOptions.forEach { options ->
-                client.queryText("/api/lex/", id, options = options)?.let { println("[JSON LEX $options]\n$it") }
-            }
-        }
-
-    listOf("row")
-        .forEach { id ->
-            allOptions.forEach { options ->
-                client.queryText("/api/word/", id, options = options)?.let { println("[JSON LEMMA $options]\n$it") }
-            }
-        }
-}
-
 fun queryText() {
     val client = Client(endpoint)
     client.queryText("/", "")?.let { println("[OEWN] $it") }
