@@ -17,6 +17,8 @@ It either:
 
 Project [client](https://github.com/oewntk/client)
 
+Project [server](https://github.com/oewntk/server)
+
 ## Dataflow
 
 ![Dataflow](images/dataflow_server_client.png  "Dataflow")
