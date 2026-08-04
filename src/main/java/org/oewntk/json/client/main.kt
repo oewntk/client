@@ -3,6 +3,8 @@ package org.oewntk.json.client
 import org.oewntk.model.Lex
 import org.oewntk.model.Sense
 import org.oewntk.model.Synset
+import java.io.File
+import kotlin.text.ifEmpty
 
 const val endpoint = "http://localhost:8080"
 
@@ -31,7 +33,7 @@ fun queryObject() {
         }
 }
 
-val allOptions = listOf(null, "mode=model", "mode=oewn", "mode=data", "mode=data,method=typed")
+val allOptions = listOf(null, "mode=model", "mode=oewn", "mode=data"/*, "mode=data,method=typed"*/)
 
 fun queryText() {
     val client = Client(endpoint)
@@ -40,33 +42,54 @@ fun queryText() {
     listOf("00001740-a", "00001740-n", "00001740-r", "00001740-v")
         .forEach { id ->
             allOptions.forEach { options ->
-                client.queryText("/api/synset/", id, options = options)?.let { println("[JSON SYNSET $options]\n$it") }
+                client.queryText("/api/synset/", id, options = options)?.let {
+                    println("[JSON SYNSET $options]\n$it")
+                    log(it, id, options)
+                }
             }
         }
 
     listOf("row%1:14:00::", "row%1:17:00::", "row%1:06:00::", "row%1:14:01::", "row%1:07:00::", "row%1:04:00::", "row%1:10:00::", "row%2:38:00::")
         .forEach { id ->
             allOptions.forEach { options ->
-                client.queryText("/api/sense/", id, options = options)?.let { println("[JSON SENSE $options]\n$it") }
+                client.queryText("/api/sense/", id, options = options)?.let {
+                    println("[JSON SENSE $options]\n$it")
+                    log(it, id, options)
+                }
             }
         }
 
     listOf("row,n-1", "row,n-2", "row,v")
         .forEach { id ->
             allOptions.forEach { options ->
-                client.queryText("/api/lex/", id, options = options)?.let { println("[JSON LEX $options]\n$it") }
+                client.queryText("/api/lex/", id, options = options)?.let {
+                    println("[JSON LEX $options]\n$it")
+                    log(it, id, options)
+                }
             }
         }
 
     listOf("row", "grow")
         .forEach { id ->
             allOptions.forEach { options ->
-                client.queryText("/api/word/", id, options = options)?.let { println("[JSON LEMMA $options]\n$it") }
+                client.queryText("/api/word/", id, options = options)?.let {
+                    println("[JSON LEMMA $options]\n$it")
+                    log(it, id, options)
+                }
             }
         }
 }
 
+fun log(output: String, id: String, options: String?) {
+    val pathname = options?.substring(5)
+    if (pathname != null) {
+        val file = File("../oewn-json-validate/_in/$pathname/$id.json")
+        println(file)
+        file.writeText("[\n$output\n]")
+    }
+}
+
 fun main(args: Array<String>) {
-    queryObject()
+    //queryObject()
     queryText()
 }
