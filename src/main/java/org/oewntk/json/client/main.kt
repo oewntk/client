@@ -35,7 +35,7 @@ fun queryObject() {
 
 val allOptions = listOf(null, "mode=model", "mode=oewn", "mode=data"/*, "mode=data,method=typed"*/)
 
-fun queryText() {
+fun queryText(logTo: String?) {
     val client = Client(endpoint)
     client.queryText("/", "")?.let { println("[OEWN] $it") }
 
@@ -44,7 +44,7 @@ fun queryText() {
             allOptions.forEach { options ->
                 client.queryText("/api/synset/", id, options = options)?.let {
                     println("[JSON SYNSET $options]\n$it")
-                    log(it, id, options)
+                    log(it, id, options, logTo)
                 }
             }
         }
@@ -54,7 +54,7 @@ fun queryText() {
             allOptions.forEach { options ->
                 client.queryText("/api/sense/", id, options = options)?.let {
                     println("[JSON SENSE $options]\n$it")
-                    log(it, id, options)
+                    log(it, id, options, logTo)
                 }
             }
         }
@@ -64,7 +64,7 @@ fun queryText() {
             allOptions.forEach { options ->
                 client.queryText("/api/lex/", id, options = options)?.let {
                     println("[JSON LEX $options]\n$it")
-                    log(it, id, options)
+                    log(it, id, options, logTo)
                 }
             }
         }
@@ -74,22 +74,24 @@ fun queryText() {
             allOptions.forEach { options ->
                 client.queryText("/api/word/", id, options = options)?.let {
                     println("[JSON LEMMA $options]\n$it")
-                    log(it, id, options)
+                    log(it, id, options, logTo)
                 }
             }
         }
 }
 
-fun log(output: String, id: String, options: String?) {
+fun log(output: String, id: String, options: String?, logTo: String?) {
+    if (logTo == null)
+        return
     val pathname = options?.substring(5)
     if (pathname != null) {
-        val file = File("../oewn-json-validate/_in/$pathname/$id.json")
+        val file = File("$logTo/$pathname/$id.json")
         println(file)
         file.writeText("[\n$output\n]")
     }
 }
 
 fun main(args: Array<String>) {
-    //queryObject()
-    queryText()
+    queryObject()
+    queryText(if (args.size >= 1) args[0] else null)
 }
