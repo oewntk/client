@@ -87,7 +87,7 @@ fun log(output: String, id: String, options: String?, logTo: String?) {
     if (pathname != null) {
         val file = File("$logTo/$pathname/$id.json")
         println(file)
-        file.writeText("[\n$output\n]")
+        file.writeText(output)
     }
 }
 
