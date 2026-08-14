@@ -4,7 +4,6 @@ import org.oewntk.model.Lex
 import org.oewntk.model.Sense
 import org.oewntk.model.Synset
 import java.io.File
-import kotlin.text.ifEmpty
 
 const val endpoint = "http://localhost:8080"
 
@@ -93,5 +92,5 @@ fun log(output: String, id: String, options: String?, logTo: String?) {
 
 fun main(args: Array<String>) {
     queryObject()
-    queryText(if (args.size >= 1) args[0] else null)
+    queryText(args.firstOrNull())
 }
