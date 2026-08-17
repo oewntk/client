@@ -13,11 +13,16 @@ trap on_err ERR
 endpoint="http://localhost:8080"
 
 echo STARTS WITH
-url="${endpoint}/api/start/$1"
+url="${endpoint}/api/starts/$1"
 curl "$url"
 echo
 
 echo INCLUDES
-url="${endpoint}/api/include/$1"
+url="${endpoint}/api/contains/$1"
+curl "$url"
+echo
+
+echo MATCHES
+url="${endpoint}/api/matches/$1"
 curl "$url"
 echo

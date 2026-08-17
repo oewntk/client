@@ -7,8 +7,8 @@ import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
 import kotlinx.cli.vararg
-import org.oewntk.json.client.Args.oewnObjectArg
-import org.oewntk.json.client.Args.optionsArg
+import org.oewntk.json.client.Args.inputTypeArg
+import org.oewntk.json.client.Args.outputFormatArg
 import org.oewntk.json.client.Args.outputModeArg
 import org.oewntk.json.client.Client.Companion.log
 import org.oewntk.model.Lex
@@ -29,12 +29,12 @@ object Main {
     private const val LEX_RE = "$LEMMA_RE,[nvars]-?\\d*"
     private const val SENSE_RE = "[a-zA-Z\\u00C0-\\u00D6\\u00D8-\\u00F60-9 \\-.+,!/':_]+%\\d+:\\d+:\\d+:$LEMMA_CHAR_RE*:\\d*"
 
-    private fun classify(input: String): Args.OEWNObject? {
+    private fun classify(input: String): Args.InputType? {
         return when {
-            input.matches("^$SYNSET_RE$".toRegex()) -> Args.OEWNObject.SYNSET
-            input.matches("^(?!$SYNSET_RE$)$LEX_RE$".toRegex()) -> Args.OEWNObject.LEX
-            input.matches("^(?!$SYNSET_RE$)$LEMMA_RE$".toRegex()) -> Args.OEWNObject.WORD
-            input.matches("^$SENSE_RE$".toRegex()) -> Args.OEWNObject.SENSE
+            input.matches("^$SYNSET_RE$".toRegex()) -> Args.InputType.SYNSET
+            input.matches("^(?!$SYNSET_RE$)$LEX_RE$".toRegex()) -> Args.InputType.LEX
+            input.matches("^(?!$SYNSET_RE$)$LEMMA_RE$".toRegex()) -> Args.InputType.WORD
+            input.matches("^$SENSE_RE$".toRegex()) -> Args.InputType.SENSE
             else -> null
         }
     }
@@ -53,9 +53,9 @@ object Main {
         // Options (start with - or --)
         // @formatter:off
         val inputs by parser.argument(          ArgType.String,                                                      description = "Query inputs")   .vararg()
-        val forcedInputType by parser.option(   oewnObjectArg,         shortName = "t", fullName = "typed",          description = "Forced input type (synset, sense, lemma, lex)")
-        val outputMode by parser.option(        outputModeArg,         shortName = "r", fullName = "return",         description = "Return")         .default(Args.ReturnType.JSON)
-        val outputType by parser.option(        optionsArg,            shortName = "o", fullName = "output",         description = "Output")         .default(Args.OutputOptions.OEWN)
+        val forcedInputType by parser.option(   inputTypeArg,          shortName = "t", fullName = "typed",          description = "Forced input type (synset, sense, lemma, lex, starts, contains, regex)")
+        val outputMode by parser.option(        outputModeArg,         shortName = "r", fullName = "return",         description = "Return")         .default(Args.OutputMode.JSON)
+        val outputFormat by parser.option(      outputFormatArg,       shortName = "f", fullName = "format",         description = "Format")         .default(Args.OutputFormat.OEWN)
 
         val url by parser.option(               ArgType.String,        shortName = "u",  fullName = "url",           description = "URL")            .default("http://localhost:8080")
         val logTo by parser.option(             ArgType.String,        shortName = "l",  fullName = "log",           description = "Log")
@@ -71,36 +71,56 @@ object Main {
             System.err.println("Inputs: $inputs")
             System.err.println("Input Type: $forcedInputType")
             System.err.println("Return: $outputMode")
-            System.err.println("Schema: $outputType")
+            System.err.println("Schema: $outputFormat")
         }
         val client = Client(url)
         inputs.forEach { id ->
             val type = forcedInputType ?: (classify(id) ?: throw IllegalArgumentException("Untyped $id"))
-            if (outputMode == Args.ReturnType.OBJECT) {
+            if (outputMode == Args.OutputMode.OBJECT) {
 
                 when (type) {
-                    Args.OEWNObject.SYNSET -> {
+                    Args.InputType.SYNSET -> {
                         client.query<Synset>("/api/synset/", id)?.let { println("[Synset] $it") }
                     }
 
-                    Args.OEWNObject.LEX -> {
+                    Args.InputType.LEX -> {
                         client.query<Lex>("/api/lex/", id)?.let { println("[Lex] $it") }
                     }
 
-                    Args.OEWNObject.SENSE -> {
+                    Args.InputType.SENSE -> {
                         client.query<Sense>("/api/sense/", id)?.let { println("[Sense] $it") }
                     }
 
-                    Args.OEWNObject.WORD -> {
+                    Args.InputType.WORD -> {
                         client.query<Collection<Lex>>("/api/word/", id)?.let { println("[Lexes] $it") }
                     }
+
+                    Args.InputType.STARTS,
+                    Args.InputType.CONTAINS,
+                    Args.InputType.MATCHES -> IllegalArgumentException(type.toString())
                 }
             } else {
 
-                val subpath = type.toString().lowercase()
-                client.queryText("/api/$subpath/", id, options = outputType.param)?.let {
-                    println("[JSON '$id' $type $outputType]\n$it")
-                    log(it, id, outputType.param, logTo)
+                when (type) {
+                    Args.InputType.SYNSET,
+                    Args.InputType.LEX,
+                    Args.InputType.SENSE,
+                    Args.InputType.WORD -> {
+                        val subpath = type.toString().lowercase()
+                        client.queryText("/api/$subpath/", id, options = outputFormat.param)?.let {
+                            println("[JSON '$id' $type $outputFormat]\n$it")
+                            log(it, id, outputFormat.param, logTo)
+                        }
+                    }
+
+                    Args.InputType.STARTS,
+                    Args.InputType.CONTAINS,
+                    Args.InputType.MATCHES -> {
+                        val subpath = type.toString().lowercase()
+                        client.queryText("/api/$subpath/", id, options = outputFormat.param)?.let {
+                            println("[JSON '$id' $type $outputFormat]\n$it")
+                        }
+                    }
                 }
             }
         }
