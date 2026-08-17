@@ -10,6 +10,7 @@ import kotlinx.cli.vararg
 import org.oewntk.json.client.Args.oewnObjectArg
 import org.oewntk.json.client.Args.optionsArg
 import org.oewntk.json.client.Args.outputModeArg
+import org.oewntk.json.client.Client.Companion.log
 import org.oewntk.model.Lex
 import org.oewntk.model.Sense
 import org.oewntk.model.Synset

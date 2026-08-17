@@ -11,6 +11,7 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
+import java.io.File
 
 val prettyJson = Json {
     prettyPrint = true
@@ -91,6 +92,19 @@ class Client(
             // Ktor propagates network and parsing exceptions up the stack
             System.err.println("[E] Failed to execute query: ${e.message}")
             null
+        }
+    }
+
+    companion object {
+        fun log(output: String, id: String, options: String?, logTo: String?) {
+            if (logTo == null)
+                return
+            val pathname = options?.substring(5)
+            if (pathname != null) {
+                val file = File("$logTo/$pathname/$id.json")
+                println(file)
+                file.writeText(output)
+            }
         }
     }
 }
