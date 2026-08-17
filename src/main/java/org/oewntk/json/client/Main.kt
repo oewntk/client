@@ -23,18 +23,18 @@ import org.oewntk.model.Synset
  */
 object Main {
 
-    private const val lemmaCharRe = "[a-zA-Z\\u00C0-\\u00D6\\u00D8-\\u00F60-9 \\-+.,:!/']"
-    private const val synsetRe = "\\d{8}-[nvars]"
-    private const val lemmaRe = "$lemmaCharRe+"
-    private const val lexRe = "$lemmaRe,[nvars]-?\\d*"
-    private val senseRe = "[a-zA-Z\\u00C0-\\u00D6\\u00D8-\\u00F60-9 \\-.+,!/':_]+%\\d+:\\d+:\\d+:$lemmaCharRe*:\\d*"
+    private const val LEMMA_CHAR_RE = "[a-zA-Z\\u00C0-\\u00D6\\u00D8-\\u00F60-9 \\-+.,:!/']"
+    private const val SYNSET_RE = "\\d{8}-[nvars]"
+    private const val LEMMA_RE = "$LEMMA_CHAR_RE+"
+    private const val LEX_RE = "$LEMMA_RE,[nvars]-?\\d*"
+    private const val SENSE_RE = "[a-zA-Z\\u00C0-\\u00D6\\u00D8-\\u00F60-9 \\-.+,!/':_]+%\\d+:\\d+:\\d+:$LEMMA_CHAR_RE*:\\d*"
 
     private fun classify(input: String): Args.OEWNObject? {
         return when {
-            input.matches("^$synsetRe$".toRegex()) -> Args.OEWNObject.SYNSET
-            input.matches("^(?!$synsetRe$)$lexRe$".toRegex()) -> Args.OEWNObject.LEX
-            input.matches("^(?!$synsetRe$)$lemmaRe$".toRegex()) -> Args.OEWNObject.WORD
-            input.matches("^$senseRe$".toRegex()) -> Args.OEWNObject.SENSE
+            input.matches("^$SYNSET_RE$".toRegex()) -> Args.OEWNObject.SYNSET
+            input.matches("^(?!$SYNSET_RE$)$LEX_RE$".toRegex()) -> Args.OEWNObject.LEX
+            input.matches("^(?!$SYNSET_RE$)$LEMMA_RE$".toRegex()) -> Args.OEWNObject.WORD
+            input.matches("^$SENSE_RE$".toRegex()) -> Args.OEWNObject.SENSE
             else -> null
         }
     }
