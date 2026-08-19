@@ -52,10 +52,13 @@ class Client(
 
     // THE CALLS: Clean suspend functions using the client
     suspend inline fun <reified T> fetch(path: String, parameter: String): T {
-        return client.get("$baseUrl$path") {
+        val response = client.get("$baseUrl$path") {
             url { appendPathSegments(parameter) }
             // parameter(parameterName, parameterValue)
-        }.body()
+        }
+        if (response.status != HttpStatusCode.OK)
+            throw IllegalArgumentException(response.status.toString())
+        return response.body()
     }
 
     inline fun <reified T> query(path: String, parameter: String): T? = runBlocking {
@@ -76,6 +79,9 @@ class Client(
             url { appendPathSegments(parameter) }
             if (options != null) header(HttpHeaders.Prefer, options)
         }
+        if (response.status != HttpStatusCode.OK)
+            throw IllegalArgumentException(response.status.toString())
+
         // Inspect if the backend subsystems honored your hint
         val appliedHints = response.headers[HttpHeaders.PreferenceApplied]
         // println("HTTP Status: ${response.status}")
