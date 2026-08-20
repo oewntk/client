@@ -7,6 +7,7 @@ digraph "io.github.oewntk:oewn-client:jar:3.0.1-SNAPSHOT" {
 	"io.github.oewntk:oewn-client:jar:3.0.1-SNAPSHOT" -> "io.ktor:ktor-client-cio-jvm:jar:3.5.1:compile" ; 
 	"io.github.oewntk:oewn-client:jar:3.0.1-SNAPSHOT" -> "io.ktor:ktor-client-content-negotiation-jvm:jar:3.5.1:compile" ; 
 	"io.github.oewntk:oewn-client:jar:3.0.1-SNAPSHOT" -> "io.ktor:ktor-client-logging-jvm:jar:3.5.1:compile" ; 
+	"io.github.oewntk:oewn-client:jar:3.0.1-SNAPSHOT" -> "org.slf4j:slf4j-simple:jar:2.0.18:runtime" ; 
 	"io.github.oewntk:oewn-client:jar:3.0.1-SNAPSHOT" -> "junit:junit:jar:4.13.2:test" ; 
 	"io.github.oewntk:model:jar:3.0.1-SNAPSHOT:compile" -> "org.jetbrains.kotlinx:kotlinx-serialization-core:jar:1.7.3:compile" ; 
 	"org.jetbrains.kotlinx:kotlinx-serialization-core:jar:1.7.3:compile" -> "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:jar:1.7.3:compile" ; 
