@@ -97,7 +97,7 @@ object Main {
 
                     Args.InputType.STARTS,
                     Args.InputType.CONTAINS,
-                    Args.InputType.MATCHES -> IllegalArgumentException(type.toString())
+                    Args.InputType.MATCHES -> throw IllegalArgumentException(type.toString())
                 }
             } else {
 
