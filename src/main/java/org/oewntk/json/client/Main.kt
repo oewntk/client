@@ -76,6 +76,11 @@ object Main {
         val client = Client(url)
         inputs.forEach { id ->
             val type = forcedInputType ?: (classify(id) ?: throw IllegalArgumentException("Untyped $id"))
+
+            if (type == Args.InputType.SCHEMA) {
+                client.query<String>("/api/schema/", id)?.let { println("[Schema $id] $it") }
+                return
+            }
             if (outputMode == Args.OutputMode.OBJECT) {
 
                 when (type) {

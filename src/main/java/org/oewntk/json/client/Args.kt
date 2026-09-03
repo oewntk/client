@@ -21,7 +21,9 @@ object Args {
 
         STARTS,
         CONTAINS,
-        MATCHES
+        MATCHES,
+
+        SCHEMA,
     }
 
     val inputTypeArg = ArgType.Choice(
@@ -37,6 +39,8 @@ object Args {
                 "ms", "starts" -> InputType.STARTS
                 "mc", "contains" -> InputType.CONTAINS
                 "mm", "matches" -> InputType.MATCHES
+
+                "x", "schema" -> InputType.SCHEMA
 
                 else -> error("Unknown object type: $raw")
             }
