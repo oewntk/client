@@ -97,7 +97,13 @@ object Main {
 
                     Args.InputType.STARTS,
                     Args.InputType.CONTAINS,
-                    Args.InputType.MATCHES -> throw IllegalArgumentException(type.toString())
+                    Args.InputType.MATCHES -> {
+                        val subpath = type.toString().lowercase()
+                        client.query<List<String>>("/api/$subpath/", id)?.let {
+                            println("\n[Words] $type '$id']\n")
+                            println(it.joinToString(separator = "\n"))
+                        }
+                    }
                 }
             } else {
 
@@ -108,7 +114,7 @@ object Main {
                     Args.InputType.WORD -> {
                         val subpath = type.toString().lowercase()
                         client.queryText("/api/$subpath/", id, options = outputFormat.param)?.let {
-                            println("[JSON '$id' $type $outputFormat]\n$it")
+                            println("\n[JSON '$id' $type $outputFormat]\n$it")
                             log(it, id, outputFormat.param, logTo)
                         }
                     }
@@ -118,7 +124,7 @@ object Main {
                     Args.InputType.MATCHES -> {
                         val subpath = type.toString().lowercase()
                         client.queryText("/api/$subpath/", id, options = outputFormat.param)?.let {
-                            println("[JSON '$id' $type $outputFormat]\n$it")
+                            println("\n[JSON '$id' $type $outputFormat]\n$it")
                         }
                     }
                 }
