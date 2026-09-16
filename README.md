@@ -7,7 +7,7 @@
 
 # OEWN JSON client
 
-This is a sketch of what a useful client to the JSON API will do.
+This is a sketch/stub of what a useful client to the JSON API will do.
 
 This emits requests and reads JSON responses.
 
@@ -17,7 +17,7 @@ Lex ids (lemma,part-of-speech, discriminant) identify a single lexical entry. Fo
 
 The client either:
 - displays raw JSON responses
-- deserializes synsets, senses and lexes from responses (JSON responses may be deserialized into model objects with '_-r object_').
+- can seamlessly deserialize model objects (synsets, senses and lexes) from responses (JSON responses may be deserialized into model objects with '_-r object_').
 
 Also note that word lookups (_starts with, contains, matches regex_) produce lists of lemmas.
 
@@ -49,4 +49,4 @@ Project [server](https://github.com/oewntk/server)
 
 ## Dependencies
 
-![Dependencies](images/client.dot  "Dependencies")
+![Dependencies](images/client.png  "Dependencies")
