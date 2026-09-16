@@ -23,4 +23,5 @@ if [ ! -e "${jar}" ]; then
   exit 2
   fi
 
-java -ea -cp "${jar}" org.oewntk.json.client.MainKt
+java -jar "${jar}" "$*"
+#java -ea -cp "${jar}" org.oewntk.json.client.Main "$*"
