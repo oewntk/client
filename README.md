@@ -45,7 +45,7 @@ Project [server](https://github.com/oewntk/server)
 
 		<groupId>io.github.oewntk</groupId>
 		<artifactId>client</artifactId>
-		<version>3.0.2</version>
+		<version>3.1.0</version>
 
 ## Dependencies
 
